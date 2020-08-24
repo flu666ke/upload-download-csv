@@ -19,9 +19,7 @@ class UploadCSVController extends BaseController {
 
         try {
             const { name: CSVfile } = req.files.file;
-            await UploadCSVService.parseCSVfile(CSVfile);
-
-            const users = await UploadCSVService.getUserCollection();
+            const users = await UploadCSVService.parseCSVfile(CSVfile, res);
 
             this.sendSuccessResponse(res, users);
         } catch (error) {

@@ -1,5 +1,4 @@
-const fs = require('fs');
-const csv = require('csv-parser');
+const csv = require('csvtojson');
 const { Parser } = require('json2csv');
 const { isEmpty } = require('lodash')
 const { RECORD_NOT_FOUND } = require('../core/response-templates')
@@ -14,30 +13,25 @@ const fields = [
 ];
 
 class UploadCSVService {
-    parseCSVfile(CSVfile) {
-        const parsedCSVfile = [];
+    async parseCSVfile(CSVfile) {
 
-        fs.createReadStream(CSVfile)
-            .pipe(csv())
-            .on('data', (data) => parsedCSVfile.push(data))
-            .on('end', async () => {
+        const parsedCSVfile = await csv().fromFile(CSVfile);
 
-                await User.insertMany(parsedCSVfile);
-            });
+        await User.insertMany(parsedCSVfile);
 
         return this.getUserCollection();
     }
 
     async createCSVfile() {
-        const usersData = await this.getUserCollection()
+        const usersData = await this.getUserCollection();
 
         if (isEmpty(usersData)) {
             throw new Error(RECORD_NOT_FOUND);
         }
 
-        const convertDataToCSV = new Parser({ fields });
+        const serializeDataToCSVfile = new Parser({ fields });
 
-        return convertDataToCSV.parse(usersData);
+        return serializeDataToCSVfile.parse(usersData);
     }
 
     async deleteDataFromDB() {
@@ -45,7 +39,7 @@ class UploadCSVService {
     }
 
     async getUserCollection() {
-        return await User.find();
+        return await User.find({}, 'UserName FirstName LastName Age');
     }
 }
 
