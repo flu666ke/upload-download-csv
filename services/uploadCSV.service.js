@@ -24,10 +24,12 @@ class UploadCSVService {
 
                 await User.insertMany(parsedCSVfile);
             });
+
+        return this.getUserCollection();
     }
 
     async createCSVfile() {
-        const usersData = await User.find();
+        const usersData = await this.getUserCollection()
 
         if (isEmpty(usersData)) {
             throw new Error(RECORD_NOT_FOUND);
@@ -40,6 +42,10 @@ class UploadCSVService {
 
     async deleteDataFromDB() {
         await User.deleteMany();
+    }
+
+    async getUserCollection() {
+        return await User.find();
     }
 }
 

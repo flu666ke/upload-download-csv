@@ -3,7 +3,6 @@ const UploadCSVService = require('../services/uploadCSV.service');
 const BaseController = require('../core/base-controller')
 const {
     INVALID_EXTENSION,
-    UPLOAD_SUCCESS,
     DELETE_SUCCESS
 } = require('../core/response-templates')
 
@@ -12,7 +11,7 @@ class UploadCSVController extends BaseController {
         res.sendFile(path.resolve('./index.html'));
     }
 
-    uploadCSVfile(req, res) {
+    async uploadCSVfile(req, res) {
 
         if (req.files && req.files.file.mimetype !== 'text/csv') {
             this.sendForbidden(res, { error: INVALID_EXTENSION });
@@ -20,9 +19,11 @@ class UploadCSVController extends BaseController {
 
         try {
             const { name: CSVfile } = req.files.file;
-            UploadCSVService.parseCSVfile(CSVfile);
+            await UploadCSVService.parseCSVfile(CSVfile);
 
-            this.sendSuccessResponse(res, { message: UPLOAD_SUCCESS })
+            const users = await UploadCSVService.getUserCollection();
+
+            this.sendSuccessResponse(res, users);
         } catch (error) {
             this.sendForbidden(res, { error: error.message });
         }
