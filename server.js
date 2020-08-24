@@ -23,8 +23,4 @@ mongoose
     .then(() => console.log('DB connected'))
     .catch((err) => console.log('DB connection ERROR: ', err));
 
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/index.html')
-// })
-
 app.listen(process.env.PORT, () => console.log('Server running'));

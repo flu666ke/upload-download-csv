@@ -1,0 +1,4 @@
+- in the main catalog in the terminal enter the yarn
+- to start the project in the main directory in the terminal, type yarn start
+- the project must work on port 4000
+- you can use the data.csv file located in the main directory to upload to the server

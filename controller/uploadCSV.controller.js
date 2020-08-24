@@ -1,3 +1,4 @@
+const path = require('path')
 const UploadCSVService = require('../services/uploadCSV.service');
 const BaseController = require('../core/base-controller')
 const {
@@ -8,14 +9,13 @@ const {
 
 class UploadCSVController extends BaseController {
     selectCSVfile(req, res) {
-        console.log(__dirname)
-        res.sendFile(__dirname + '/index.html');
+        res.sendFile(path.resolve('./index.html'));
     }
 
     uploadCSVfile(req, res) {
 
         if (req.files && req.files.file.mimetype !== 'text/csv') {
-            this.sendForbidden(res, { error: INVALID_EXTENSION })
+            this.sendForbidden(res, { error: INVALID_EXTENSION });
         }
 
         try {
